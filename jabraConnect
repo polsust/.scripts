@@ -1,0 +1,3 @@
+#!/bin/sh
+
+bluetoothctl connect 2C:FD:B3:F5:85:71

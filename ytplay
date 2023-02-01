@@ -1,0 +1,12 @@
+#!/bin/sh
+# dependencies: firefox, rofi
+
+query=$(rofi -dmenu -p | tr ' ' '+')
+
+if [ "$query" != "" ];
+then
+    videoCode=$(curl -s "https://vid.puffyan.us/search?q=$query" | grep -Eo "watch\?v=.{11}" | head -n 1)
+    mpv --no-video "https://youtube.com/$videoCode"
+fi
+
+# firefox

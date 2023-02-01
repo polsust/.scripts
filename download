@@ -1,0 +1,6 @@
+#!/bin/sh
+# dependencies: aria2, rofi
+
+downloadLink=$(rofi -dmenu -p)
+
+$TERM -e aria2c -d ~/Downloads $downloadLink

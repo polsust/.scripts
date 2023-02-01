@@ -1,0 +1,50 @@
+#!/bin/sh
+# gnu stow wrapper for managing dotfiles
+# usage:
+#        dot add $file
+#        dot rm $file
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+RESET='\033[0m'
+
+if [ ! -d ~/.dotfiles ]; then
+    echo "Creating ~/.dotfiles directory"
+    mkdir ~/.dotfiles
+fi
+
+insideHomeFilePath=$(pwd | awk -F"$(whoami)/" '{print $2}')
+
+# echo "~/.dotfiles/${insideHomeFilePath}/$1"
+
+fullPath=~/.dotfiles/${insideHomeFilePath}/$2
+
+add ()
+{
+    mv $1 $fullPath
+
+    if [ -f $fullPath ] || [ -d $fullPath  ]; then
+        echo -e "${GREEN}Added ${1} to ${fullPath}${RESET}"
+
+        cd ~/.dotfiles
+        stow .
+    else
+        echo -e "${RED}Tried adding ${1} to ${fullPath} but something went wrong!${RESET}"
+
+    fi
+}
+
+rm ()
+{
+    cd ~/.dotfiles
+    # remove symlinks
+    stow --delete .
+
+    mv $fullPath ~/$insideHomeFilePath/$1
+    # add the symlinks again
+    stow .
+
+}
+
+# run respective funcion and pass the argument
+$1 $2

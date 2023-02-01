@@ -1,0 +1,7 @@
+#!/bin/sh
+
+menu_command="rofi -dmenu -width 100"
+
+bssid=$(nmcli device wifi list | sed -n '1!p' | cut -b 9- | $menu_command "Select Wifi  :" -l 20 | cut -d' ' -f1)
+pass=$($menu_command "Enter password :")
+nmcli device wifi connect $bssid password $pass

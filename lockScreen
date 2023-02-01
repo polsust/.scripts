@@ -1,0 +1,11 @@
+#!/bin/sh
+# dependencies: betterlockscreen
+
+betterlockscreen -l &
+
+imgPath="$HOME/Pictures/wallpaper.png"
+
+imageUrl=$(curl "https://random.imagecdn.app/v1/image?width=1920&height=1080&category=buildings")
+curl "$imageUrl" > "$imgPath" 
+
+betterlockscreen -u "$imgPath"  # this is the one that will be used the next time

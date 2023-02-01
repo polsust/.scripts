@@ -1,0 +1,5 @@
+#!/bin/sh
+if xrandr | grep -q 'HDMI1 connected' ; then
+    autorandr main
+    # xrandr --output HDMI1 --primary --mode 1920x1080 --rate 75 --output eDP1 --mode 1920x1080 &
+fi
