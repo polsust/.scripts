@@ -2,8 +2,11 @@
 const { spawn } = require("child_process");
 const { readFile } = require("fs/promises");
 
+const ext = process.argv[2] ?? "md";
+let num = process.argv[3];
+
 (async () => {
-  const num = await getFileNum();
+  num ??= await getFileNum();
 
   spawnNvim(getFilePath(num));
 })();
@@ -11,7 +14,6 @@ const { readFile } = require("fs/promises");
 function getFilePath(n = 0) {
   const basePath = "/tmp/";
   const baseFilename = "tmp_";
-  const ext = process.argv[2] ?? "md";
   const fullFilename = `${baseFilename}${n}.${ext}`;
   const fullPath = `${basePath}${fullFilename}`;
 
