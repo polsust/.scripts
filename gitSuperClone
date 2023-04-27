@@ -1,0 +1,15 @@
+#!/bin/sh
+
+dir=$(echo $1 | grep -oP "(?<=/)[^/]*(?=\.)")
+
+git clone $1
+cd $dir
+
+git remote set-url origin "git@github.com:easyCapital/$2.git"
+
+gitFetchBranches
+
+git push --all
+git push --tags
+
+cd ..
