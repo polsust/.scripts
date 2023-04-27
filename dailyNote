@@ -1,0 +1,29 @@
+#!/bin/env node
+const { spawn } = require("child_process");
+const fs = require("fs");
+
+const d = new Date();
+
+let day = d.getDate().toString();
+if (day.length == 1) day = `0${day}`;
+
+let month = (d.getMonth() + 1).toString();
+if (month.length == 1) month = `0${month}`;
+
+const year = d.getFullYear();
+
+const date = `${day}-${month}-${year}`;
+
+const basePath = `/home/${process.env.USER}/notes`;
+
+if (!fs.existsSync(`${basePath}/dailyNotes/${date}.md`)) {
+  fs.copyFile(
+    `${basePath}/templates/dailyNoteTemplate.md`,
+    `${basePath}/dailyNotes/${date}.md`,
+    () => { }
+  );
+}
+
+spawn(process.env.EDITOR ?? "nvim", [`${basePath}/dailyNotes/${date}.md`], {
+  stdio: "inherit",
+});
