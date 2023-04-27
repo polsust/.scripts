@@ -1,0 +1,21 @@
+#!/bin/sh
+
+
+cd "$1" || exit
+
+selected_dir=$(ls -d -- */ | fzf)
+
+is_git_repo() {
+ if [ -d "$1/.git" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+if is_git_repo "$selected_dir" ; then
+  "$EDITOR" "$selected_dir"
+else
+  $0 "$selected_dir"
+fi
+
