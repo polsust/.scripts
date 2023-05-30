@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# finder_cmd="rofi -dmenu -p config"
+finder_cmd="fzf"
+
+config_paths=(
+  "fish/config.fish"
+  "nvim/lua/user/"
+  "qtile/"
+  "ranger/"
+  "rofi/"
+  "picom/"
+)
+
+home_paths=(
+  ".bashrc"
+  ".xinitrc"
+)
+
+etc_paths=(
+  "X11/xorg.conf.d/"
+)
+
+
+selected_file=$(printf '%s\n' "${home_paths[@]}" "${etc_paths[@]}" "${config_paths[@]}" | "$finder_cmd")
+
+
+if printf '%s\n' "${home_paths[@]}" | grep -q "^$selected_file$"; then
+  selected_file="~/$selected_file"
+elif printf '%s\n' "${etc_paths[@]}" | grep -q "^$selected_file$"; then
+  selected_file="/etc/$selected_file"
+elif printf '%s\n' "${config_paths[@]}" | grep -q "^$selected_file$"; then
+  selected_file="$HOME/.config/$selected_file"
+fi
+
+echo "$selected_file"
