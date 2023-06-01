@@ -1,7 +1,7 @@
 #!/bin/bash
 # dependencies: firefox, rofi
 
-text=$(rofi -dmenu -p | tr ' ' '+')
+text=$(rofi -dmenu -p)
 
 if [ "$text" != "" ];
 then
