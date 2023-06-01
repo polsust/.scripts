@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # dependencies: aria2, rofi
 
 downloadLink=$(rofi -dmenu -p)
