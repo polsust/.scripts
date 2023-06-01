@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # finder_cmd="rofi -dmenu -p config"
 finder_cmd="fzf"
