@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 glyphs=$(curl -s https://raw.githubusercontent.com/groovykiwi/rofi-nerdfont/master/nerd-font-cheatsheet.txt)
 

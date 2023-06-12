@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 menu_command="rofi -dmenu -width 100"
 

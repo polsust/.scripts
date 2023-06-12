@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # dependencies: firefox, rofi
 
-text=$(rofi -dmenu -p | tr ' ' '+')
+text=$(rofi -dmenu -p)
 
 if [ "$text" != "" ];
 then
-    firefox "https://translate.google.com/?sl=auto&tl=es&text=$text&op=translate"
+    firefox --new-window "https://translate.google.com/?sl=auto&tl=es&text=$text&op=translate"
 fi
