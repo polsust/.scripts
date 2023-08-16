@@ -26,7 +26,7 @@ selected_file=$(printf '%s\n' "${home_paths[@]}" "${etc_paths[@]}" "${config_pat
 
 
 if printf '%s\n' "${home_paths[@]}" | grep -q "^$selected_file$"; then
-  selected_file="~/$selected_file"
+  selected_file="$HOME/$selected_file"
 elif printf '%s\n' "${etc_paths[@]}" | grep -q "^$selected_file$"; then
   selected_file="/etc/$selected_file"
 elif printf '%s\n' "${config_paths[@]}" | grep -q "^$selected_file$"; then
