@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# finder_cmd="rofi -dmenu -p config"
+finder_cmd="fzf"
+
+paths=(
+  "journaling"
+  "cesi"
+  "let-go"
+  "todo"
+  "goals.md"
+)
+
+selected_file=$(printf '%s\n' "${paths[@]}" | "$finder_cmd")
+
+echo "$HOME/notes/$selected_file"
