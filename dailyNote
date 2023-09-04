@@ -22,7 +22,7 @@ const basePath = `/home/${process.env.USER}/notes`;
 
 if (!fs.existsSync(`${basePath}/dailyNotes/${date}.md`)) {
   fs.copyFile(
-    `${basePath}/templates/dailyNoteTemplate.md`,
+    `${basePath}/_templates/dailyNoteTemplate.md`,
     `${basePath}/dailyNotes/${date}.md`,
     () => { }
   );
