@@ -22,7 +22,15 @@ etc_paths=(
 )
 
 
-selected_file=$(printf '%s\n' "${home_paths[@]}" "${etc_paths[@]}" "${config_paths[@]}" | "$finder_cmd")
+file_list=$(printf '%s\n' "${home_paths[@]}" "${etc_paths[@]}" "${config_paths[@]}" | rg "$1")
+
+file_amount=$(echo "$file_list" | wc -l)
+
+if [ "$file_amount" == 1 ]; then
+  selected_file="$file_list"
+else
+  selected_file=$(echo "$file_list" | "$finder_cmd")
+fi
 
 
 if printf '%s\n' "${home_paths[@]}" | grep -q "^$selected_file$"; then
@@ -33,4 +41,4 @@ elif printf '%s\n' "${config_paths[@]}" | grep -q "^$selected_file$"; then
   selected_file="$HOME/.config/$selected_file"
 fi
 
-echo "$selected_file"
+"$EDITOR" "$selected_file"
