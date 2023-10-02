@@ -1,6 +1,12 @@
 #!/bin/env node
 const { spawn } = require("child_process");
+const { existsSync, mkdirSync } = require("fs");
+
 const { readFile } = require("fs/promises");
+
+const HOME = process.env.HOME;
+
+if (!existsSync(`${HOME}/.tmp`)) mkdirSync(`${HOME}/.tmp`);
 
 const ext = process.argv[2] ?? "md";
 let num = process.argv[3];
@@ -12,7 +18,7 @@ let num = process.argv[3];
 })();
 
 function getFilePath(n = 0) {
-  const basePath = "/tmp/";
+  const basePath = `${HOME}/.tmp/`;
   const baseFilename = "tmp_";
   const fullFilename = `${baseFilename}${n}.${ext}`;
   const fullPath = `${basePath}${fullFilename}`;
