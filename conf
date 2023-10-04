@@ -10,6 +10,7 @@ config_paths=(
   "ranger/"
   "rofi/"
   "picom/"
+  "alacritty/alacritty.yml"
 )
 
 home_paths=(
