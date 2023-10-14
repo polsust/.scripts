@@ -1,5 +1,19 @@
 #!/bin/bash
 
-# bluetoothctl devices | cut -f2 -d' ' | while read uuid; do bluetoothctl info "$uuid"; done | grep -e "Device\|Connected\|Name"
+devices=$(bluetoothctl devices | cut -f2 -d' ' | while read uuid; do bluetoothctl info "$uuid"; done | grep -e "Device\|Connected\|Name")
 
-bluetoothctl connect 2C:FD:B3:F5:85:71
+
+id_line=$(echo "$devices" | grep -B 1 "Jabra Elite 3"| sed -n '2!p')
+
+# Use awk to extract the ID
+id=$(echo "$id_line" | awk '{print $2}')
+
+jabra_info=$(bluetoothctl info "$id")
+
+is_connected=$(echo "$jabra_info" | grep "Connected" | awk '{print $2}')
+
+if [ "$is_connected" == "yes" ]; then
+  bluetoothctl disconnect "$id"
+else
+  bluetoothctl connect "$id"
+fi
