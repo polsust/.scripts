@@ -12,6 +12,10 @@ jabra_info=$(bluetoothctl info "$id")
 
 is_connected=$(echo "$jabra_info" | grep "Connected" | awk '{print $2}')
 
+ [[ $is_connected = "yes" ]] && action="Disconnecting" || action="Connecting"
+
+notify-send "🎧 $action" "Jabra Elite 3"
+
 if [ "$is_connected" == "yes" ]; then
   bluetoothctl disconnect "$id"
 else
