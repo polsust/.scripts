@@ -20,14 +20,14 @@ const date = `${day}-${month}-${year}`;
 
 const basePath = `/home/${process.env.USER}/notes`;
 
-if (!fs.existsSync(`${basePath}/dailyNotes/${date}.md`)) {
+if (!fs.existsSync(`${basePath}/#7 dailyNotes/${date}.md`)) {
   fs.copyFile(
-    `${basePath}/_templates/dailyNoteTemplate.md`,
-    `${basePath}/dailyNotes/${date}.md`,
+    `${basePath}/#6 _templates/dailyNoteTemplate.md`,
+    `${basePath}/#7 dailyNotes/${date}.md`,
     () => { }
   );
 }
 
-spawn(process.env.EDITOR ?? "nvim", [`${basePath}/dailyNotes/${date}.md`], {
+spawn(process.env.EDITOR ?? "nvim", [`${basePath}/#7 dailyNotes/${date}.md`], {
   stdio: "inherit",
 });
