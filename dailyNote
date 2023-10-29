@@ -19,15 +19,13 @@ const year = d.getFullYear();
 const date = `${day}-${month}-${year}`;
 
 const basePath = `/home/${process.env.USER}/notes`;
+const source = `${basePath}/#6 _templates/dailyNoteTemplate.md`;
+const destination = `${basePath}/#7 dailyNotes/${date}.md`;
 
-if (!fs.existsSync(`${basePath}/#7 dailyNotes/${date}.md`)) {
-  fs.copyFile(
-    `${basePath}/#6 _templates/dailyNoteTemplate.md`,
-    `${basePath}/#7 dailyNotes/${date}.md`,
-    () => { }
-  );
+if (!fs.existsSync(destination)) {
+  fs.copyFileSync(source, destination);
 }
 
-spawn(process.env.EDITOR ?? "nvim", [`${basePath}/#7 dailyNotes/${date}.md`], {
+spawn(process.env.EDITOR ?? "nvim", [destination], {
   stdio: "inherit",
 });
