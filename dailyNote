@@ -15,15 +15,25 @@ let month = (d.getMonth() + 1).toString();
 if (month.length == 1) month = `0${month}`;
 
 const year = d.getFullYear();
+const weekday = d.toLocaleDateString("en-US", { weekday: "long" });
 
 const date = `${day}-${month}-${year}`;
+const dateWithWeekday = `${date} ${weekday}`;
 
 const basePath = `/home/${process.env.USER}/notes`;
 const source = `${basePath}/#6 _templates/dailyNoteTemplate.md`;
 const destination = `${basePath}/#7 dailyNotes/${date}.md`;
 
 if (!fs.existsSync(destination)) {
-  fs.copyFileSync(source, destination);
+  fs.readFile(source, "utf-8", function(err, data) {
+    if (err) throw err;
+
+    const changedVarsContent = data.replace(/{date}/gim, dateWithWeekday);
+
+    fs.writeFileSync("/tmp/dailyNote", changedVarsContent);
+
+    fs.copyFileSync("/tmp/dailyNote", destination);
+  });
 }
 
 spawn(process.env.EDITOR ?? "nvim", [destination], {
