@@ -1,0 +1,9 @@
+#!/bin/bash
+
+run-on-term "cd $HOME/repos/CRMGestionLocation/api && docker-compose up"
+run-on-term "cd $HOME/repos/CRMGestionLocation/front && yarn dev"
+
+run-on-term "nvim $HOME/repos/CRMGestionLocation/api"
+xdotool key "Super_L+Shift_L+3"
+run-on-term "nvim $HOME/repos/CRMGestionLocation/front"
+xdotool key "Super_L+Shift_L+2"
