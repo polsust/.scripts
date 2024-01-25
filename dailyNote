@@ -7,17 +7,36 @@ const d = new Date();
 const offset = parseInt(process.argv[2] ?? 0);
 
 d.setDate(d.getDate() + offset);
+const prevDate = new Date();
+prevDate.setDate(d.getDate() - 1);
+const nextDate = new Date();
+nextDate.setDate(d.getDate() + 1);
 
 let day = d.getDate().toString();
+let prevDay = prevDate.getDate().toString();
+let nextDay = nextDate.getDate().toString();
+
 if (day.length == 1) day = `0${day}`;
+if (prevDay.length == 1) prevDay = `0${prevDay}`;
+if (nextDay.length == 1) nextDay = `0${nextDay}`;
 
 let month = (d.getMonth() + 1).toString();
+let prevMonth = (prevDate.getMonth() + 1).toString();
+let nextMonth = (nextDate.getMonth() + 1).toString();
+
 if (month.length == 1) month = `0${month}`;
+if (prevMonth.length == 1) prevMonth = `0${prevMonth}`;
+if (nextMonth.length == 1) nextMonth = `0${nextMonth}`;
 
 const year = d.getFullYear();
+const prevYear = prevDate.getFullYear();
+const nextYear = nextDate.getFullYear();
+
 const weekday = d.toLocaleDateString("en-US", { weekday: "long" });
 
 const date = `${day}-${month}-${year}`;
+const prevDateStr = `${prevDay}-${prevMonth}-${prevYear}`;
+const nextDateStr = `${nextDay}-${nextMonth}-${nextYear}`;
 const dateWithWeekday = `${date} ${weekday}`;
 
 const basePath = `/home/${process.env.USER}/notes`;
@@ -28,7 +47,10 @@ if (!fs.existsSync(destination)) {
   fs.readFile(source, "utf-8", function(err, data) {
     if (err) throw err;
 
-    const changedVarsContent = data.replace(/{date}/gim, dateWithWeekday);
+    const changedVarsContent = data
+      .replace(/{date}/gim, dateWithWeekday)
+      .replace(/{prev}/gim, `${prevDateStr}.md`)
+      .replace(/{next}/gim, `${nextDateStr}.md`);
 
     fs.writeFileSync("/tmp/dailyNote", changedVarsContent);
 
