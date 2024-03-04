@@ -5,5 +5,16 @@ run-on-term "cd $HOME/repos/CRMGestionLocation/front && yarn dev"
 
 run-on-term "nvim $HOME/repos/CRMGestionLocation/api"
 xdotool key "Super_L+Shift_L+3"
+
 run-on-term "nvim $HOME/repos/CRMGestionLocation/front"
 xdotool key "Super_L+Shift_L+2"
+
+run-on-term "docker exec -it -u dev crm_gestion_location fish"
+xdotool key "Super_L+Shift_L+4"
+
+run-on-term "sshO2switch"
+xdotool key "Super_L+Shift_L+7"
+
+run-on-term "sshO2switch"
+xdotool key "Super_L+Shift_L+7"
+# sleep 1
