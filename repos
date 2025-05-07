@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# finder_cmd="rofi -dmenu -p config"
+finder_cmd="fzf"
+
+repos_path="$HOME/repos/"
+
+file_list=$(printf '%s\n' "$(ls "$repos_path")"  | rg "$1")
+
+file_amount=$(echo "$file_list" | wc -l)
+
+if [ "$file_amount" == 1 ] && [ "$file_list" != "" ]; then
+  selected_file="$file_list"
+elif [ "$file_list" == "" ]; then
+  selected_file=$(ls "$repos_path" | "$finder_cmd")
+else
+  selected_file=$(echo "$file_list" | "$finder_cmd")
+fi
+
+if [ "$selected_file" == "" ]; then
+  exit 0
+fi
+
+"$EDITOR" "$repos_path""$selected_file"
