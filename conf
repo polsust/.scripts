@@ -42,4 +42,8 @@ elif printf '%s\n' "${config_paths[@]}" | grep -q "^$selected_file$"; then
   selected_file="$HOME/.config/$selected_file"
 fi
 
+if [ "$selected_file" == "" ]; then
+  exit 0
+fi
+
 "$EDITOR" "$selected_file"
