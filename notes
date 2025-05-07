@@ -1,16 +1,23 @@
 #!/bin/bash
 
-# finder_cmd="rofi -dmenu -p config"
 finder_cmd="fzf"
 
-paths=(
-  "journaling"
-  "cesi"
-  "let-go"
-  "todo"
-  "goals.md"
-)
+notes_path="$HOME/notes/"
 
-selected_file=$(printf '%s\n' "${paths[@]}" | "$finder_cmd")
+file_list=$(printf '%s\n' "$(find "$notes_path" -type d )"  | rg "$1")
 
-echo "$HOME/notes/$selected_file"
+file_amount=$(echo "$file_list" | wc -l)
+
+if [ "$file_amount" == 1 ] && [ "$file_list" != "" ]; then
+  selected_file="$file_list"
+elif [ "$file_list" == "" ]; then
+  selected_file=$(ls "$notes_path" | "$finder_cmd")
+else
+  selected_file=$(echo "$file_list" | "$finder_cmd")
+fi
+
+if [ "$selected_file" == "" ]; then
+  exit 0
+fi
+
+"$EDITOR" "$selected_file"
