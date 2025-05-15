@@ -5,7 +5,7 @@ finder_cmd="fzf"
 
 repos_path="$HOME/repos/"
 
-file_list=$(printf '%s\n' "$(ls "$repos_path")"  | rg "$1")
+file_list=$(printf '%s\n' "$(ls "$repos_path")"  | rg -i "$1")
 
 file_amount=$(echo "$file_list" | wc -l)
 

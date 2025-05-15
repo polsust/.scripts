@@ -4,7 +4,7 @@ finder_cmd="fzf"
 
 notes_path="$HOME/notes/"
 
-file_list=$(printf '%s\n' "$(find "$notes_path" -type d )"  | rg "$1")
+file_list=$(printf '%s\n' "$(find "$notes_path" -type d )"  | rg -i "$1")
 
 file_amount=$(echo "$file_list" | wc -l)
 
