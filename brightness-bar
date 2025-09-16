@@ -6,5 +6,5 @@ BRIGHTNESS="$BACKLIGHT/brightness"
 MAX_BRIGHTNESS=$(cat "$BACKLIGHT/max_brightness")
 
 inotifywait -m -e modify "$BRIGHTNESS" \
-  | while IFS= read -r line; do cat $BRIGHTNESS; done \
-  | xob -m "$MAX_BRIGHTNESS"
+  | while IFS= read -r line; do cat "$BRIGHTNESS"; done \
+  | xob -m "$MAX_BRIGHTNESS" -c "$HOME/.config/xob/brightness.cfg"
