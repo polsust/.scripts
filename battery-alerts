@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+while true
+do
+  battery_level=$(acpi -b | grep -P -o '[0-9]+(?=%)')
+
+  [ "$battery_level" -le 10 ] && notify-send --urgency=CRITICAL --icon=battery-low "Battery is Low" "${battery_level}%"
+  [ "$battery_level" -le 5 ] && notify-send --urgency=CRITICAL --icon=battery-caution "Battery is Low" "${battery_level}%"
+  [ "$battery_level" -le 2 ] && notify-send --urgency=CRITICAL --icon=battery-empty "Battery is Critical" "${battery_level}%"
+
+  sleep 60
+done
