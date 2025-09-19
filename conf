@@ -1,49 +1,43 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# finder_cmd="rofi -dmenu -p config"
-finder_cmd="fzf"
+R='\033[0;31m'
 
-config_paths=(
-  "fish/config.fish"
-  "nvim/lua/user/"
-  "qtile/"
-  "ranger/"
-  "rofi/"
-  "picom/"
-  "alacritty/alacritty.toml"
-)
+edit() {
+  "$EDITOR" "$1" && exit
+}
 
-home_paths=(
-  ".bashrc"
-  ".xinitrc"
-)
+edit_main_file_or_edit() {
+  element_name=$(echo "$1" |sed 's|\.config||; s|/||g')
 
-etc_paths=(
-  "X11/xorg.conf.d/"
-)
+  potential_main_file=$(cd "$1" && fd -t file -d=1 -H -E ".git*" "$element_name|conf|main|init|rc|index"| head -n 1)
 
+  [ -f "$1""$potential_main_file" ] && edit "$1""$potential_main_file"
+  edit "$1"
+}
 
-file_list=$(printf '%s\n' "${home_paths[@]}" "${etc_paths[@]}" "${config_paths[@]}" | rg "$1")
+cd "$HOME"/.dotfiles/ 2>/dev/null || { echo -e "${R} ~/.dotfiles/ not found"; exit 1; }
 
-file_amount=$(echo "$file_list" | wc -l)
+config_paths=$(fd -t directory -H --exact-depth=2 -E=".git" & fd -t file -H -d=1 -E=".git*" -E="README.md" -E="LICENSE")
 
-if [ "$file_amount" == 1 ]; then
-  selected_file="$file_list"
-else
-  selected_file=$(echo "$file_list" | "$finder_cmd")
-fi
+list=$(printf '%s\n' "${config_paths[@]}" | rg "$1")
 
+list_elements_count=0
 
-if printf '%s\n' "${home_paths[@]}" | grep -q "^$selected_file$"; then
-  selected_file="$HOME/$selected_file"
-elif printf '%s\n' "${etc_paths[@]}" | grep -q "^$selected_file$"; then
-  selected_file="/etc/$selected_file"
-elif printf '%s\n' "${config_paths[@]}" | grep -q "^$selected_file$"; then
-  selected_file="$HOME/.config/$selected_file"
-fi
+[ "$list" != "" ] && list_elements_count=$(echo "$list" | wc -l)
 
-if [ "$selected_file" == "" ]; then
-  exit 0
-fi
+[ "$list_elements_count" = 1 ] && [ -f "$list" ] && edit "$list" 
+[ "$list_elements_count" = 1 ] && [ -d "$list" ] && edit_main_file_or_edit "$list" 
+[ "$list_elements_count" = 0 ] && echo -e "${R}No elements found!" && exit
 
-"$EDITOR" "$selected_file"
+selected_element=$(echo "$list" | fzf)
+
+[ "$selected_element" = "" ] && exit 0
+
+[ -f "$selected_element" ] && edit "$selected_element"
+
+files_inside_dir=$(cd "$selected_element" && fd -d=1)
+amount_of_files=$(echo "$files_inside_dir" | wc -l)
+
+[ "$amount_of_files" = 1 ] && edit "$selected_element""$files_inside_dir"
+
+edit_main_file_or_edit "$selected_element"
