@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 glyphs=$(curl -s https://raw.githubusercontent.com/groovykiwi/rofi-nerdfont/master/nerd-font-cheatsheet.txt)
 
@@ -6,12 +6,7 @@ menu_cmd="rofi -dmenu -p 'NF Cheatsheet' -columns 2 -width 40"
 
 selected=$(echo "$glyphs" | eval "$menu_cmd")
 
-selected=$(
-  echo "$selected" |
-  cut -d" " -f2 |
-  tr '\n' ' ' |
-  sed 's/⠀//g; s/\s//g' 
+# Remove first column, all spaces, and join into a single line
+selected=$(echo "$selected" | awk '{print $1}' | tr -d '[:space:]')
 
-)
-
-echo "$selected" | xclip -selection clipboard
+echo -n "$selected" | xclip -selection clipboard
