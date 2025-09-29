@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Get current default mic
+current=$(pactl get-default-sink)
+
+# Build menu: "Description<TAB>Name"
+menu=$(pactl list sinks | grep -v ".monitor" | awk -F': ' '
+    /^Source #/ {name=""; desc=""}
+    /Name:/ {name=$2}
+    /Description:/ {desc=$2; if(name!="") print desc "\t" name}
+' | while IFS=$'\t' read -r desc name; do
+    if [ "$name" = "$current" ]; then
+        echo "$desc" [DEFAULT] $'\t'"$name"
+    else
+        echo "$desc"$'\t'"$name"
+    fi
+done)
+
+# Show only description in rofi
+choice=$(echo "$menu" | sed $'s/\t[^\t]*$//' | rofi -dmenu -p "Select an audio source:")
+
+
+# Match chosen description back to Name
+selected=$(echo "$menu" | grep -F "$choice" | awk -F'\t' '{print $2}')
+
+# Apply if chosen
+[ "$selected" != "" ] && pactl set-default-sink "$selected" && echo "Set to: $choice"
