@@ -3,6 +3,15 @@
 R='\033[0;31m'
 
 edit() {
+	target="$1"
+	if [ -d "$target" ]; then
+		cd "$target" || exit
+		"$EDITOR" . && exit
+	else
+		cd "$(dirname "$target")" || exit
+		"$EDITOR" "$target" && exit
+	fi
+
 	"$EDITOR" "$1" && exit
 }
 
@@ -10,10 +19,10 @@ edit_main_file_or_edit() {
 	element_name=$(echo "$1" | sed 's|\.config||; s|/||g')
 
 	# should exclude the extension!
-	potential_main_file=$(cd "$1" && fd -t file -d=1 -H -E ".git*" "$element_name|conf|main|init|rc|index" | head -n 1)
+	potential_main_file=$(cd "$1" && fd -t file -d=1 -H -E ".git*" "$element_name|conf|main|rc|index" | head -n 1)
 
-	[ -f "$1""$potential_main_file" ] && edit "$1""$potential_main_file"
-	edit "$1"
+	[ -f "$1""$potential_main_file" ] && edit ~/"$1""$potential_main_file"
+	edit ~/"$1"
 }
 
 cd "$HOME"/.dotfiles/ 2>/dev/null || {
@@ -32,7 +41,7 @@ list_elements_count=0
 
 [ "$list" != "" ] && list_elements_count=$(echo "$list" | wc -l)
 
-[ "$list_elements_count" = 1 ] && [ -f "$list" ] && edit "$list"
+[ "$list_elements_count" = 1 ] && [ -f "$list" ] && edit ~/"$list"
 [ "$list_elements_count" = 1 ] && [ -d "$list" ] && edit_main_file_or_edit "$list"
 [ "$list_elements_count" = 0 ] && echo -e "${R}No elements found!" && exit
 
@@ -40,11 +49,11 @@ selected_element=$(echo "$list" | fzf)
 
 [ "$selected_element" = "" ] && exit 0
 
-[ -f "$selected_element" ] && edit "$selected_element"
+[ -f "$selected_element" ] && edit ~/"$selected_element"
 
 files_inside_dir=$(cd "$selected_element" && fd -d=1)
 amount_of_files=$(echo "$files_inside_dir" | wc -l)
 
-[ "$amount_of_files" = 1 ] && edit "$selected_element""$files_inside_dir"
+[ "$amount_of_files" = 1 ] && edit ~/"$selected_element""$files_inside_dir"
 
 edit_main_file_or_edit "$selected_element"
