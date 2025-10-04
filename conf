@@ -3,21 +3,28 @@
 R='\033[0;31m'
 
 edit() {
-  "$EDITOR" "$1" && exit
+	"$EDITOR" "$1" && exit
 }
 
 edit_main_file_or_edit() {
-  element_name=$(echo "$1" |sed 's|\.config||; s|/||g')
+	element_name=$(echo "$1" | sed 's|\.config||; s|/||g')
 
-  potential_main_file=$(cd "$1" && fd -t file -d=1 -H -E ".git*" "$element_name|conf|main|init|rc|index"| head -n 1)
+	# should exclude the extension!
+	potential_main_file=$(cd "$1" && fd -t file -d=1 -H -E ".git*" "$element_name|conf|main|init|rc|index" | head -n 1)
 
-  [ -f "$1""$potential_main_file" ] && edit "$1""$potential_main_file"
-  edit "$1"
+	[ -f "$1""$potential_main_file" ] && edit "$1""$potential_main_file"
+	edit "$1"
 }
 
-cd "$HOME"/.dotfiles/ 2>/dev/null || { echo -e "${R} ~/.dotfiles/ not found"; exit 1; }
+cd "$HOME"/.dotfiles/ 2>/dev/null || {
+	echo -e "${R} ~/.dotfiles/ not found"
+	exit 1
+}
 
-config_paths=$(fd -t directory -H --exact-depth=2 -E=".git" & fd -t file -H -d=1 -E=".git*" -E="README.md" -E="LICENSE")
+config_paths=$(
+	fd -t directory -H --exact-depth=2 -E=".git" &
+	fd -t file -H -d=1 -E=".git*" -E="README.md" -E="LICENSE"
+)
 
 list=$(printf '%s\n' "${config_paths[@]}" | rg "$1")
 
@@ -25,8 +32,8 @@ list_elements_count=0
 
 [ "$list" != "" ] && list_elements_count=$(echo "$list" | wc -l)
 
-[ "$list_elements_count" = 1 ] && [ -f "$list" ] && edit "$list" 
-[ "$list_elements_count" = 1 ] && [ -d "$list" ] && edit_main_file_or_edit "$list" 
+[ "$list_elements_count" = 1 ] && [ -f "$list" ] && edit "$list"
+[ "$list_elements_count" = 1 ] && [ -d "$list" ] && edit_main_file_or_edit "$list"
 [ "$list_elements_count" = 0 ] && echo -e "${R}No elements found!" && exit
 
 selected_element=$(echo "$list" | fzf)
