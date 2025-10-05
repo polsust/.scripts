@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+selection=$(hacksaw -c "#fff" -f "-i %i -g %g" 2> /dev/null)
+
+[ "$selection" = "" ] && exit
+
+# no quotes!
+shotgun $selection - | xclip -t 'image/png' -selection clipboard
