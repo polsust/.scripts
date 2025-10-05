@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-glyphs=$(curl -s https://raw.githubusercontent.com/groovykiwi/rofi-nerdfont/master/nerd-font-cheatsheet.txt)
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/nf-cheatsheet"
+CACHE_FILE="$CACHE_DIR/nerd-font-cheatsheet.txt"
+URL="https://raw.githubusercontent.com/groovykiwi/rofi-nerdfont/master/nerd-font-cheatsheet.txt"
+
+mkdir -p "$CACHE_DIR"
+
+# refresh if cache is missing or older than 1 day
+[ ! -f "$CACHE_FILE" ] && curl -s "$URL" -o "$CACHE_FILE"
+
+glyphs=$(cat "$CACHE_FILE")
 
 menu_cmd="rofi -dmenu -p 'NF Cheatsheet' -columns 2 -width 40"
 
