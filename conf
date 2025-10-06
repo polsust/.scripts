@@ -19,7 +19,7 @@ edit_main_file_or_edit() {
 	element_name=$(echo "$1" | sed 's|\.config||; s|/||g')
 
 	# should exclude the extension!
-	potential_main_file=$(cd "$1" && fd -t file -d=1 -H -E ".git*" "$element_name|conf|main|rc|index" | head -n 1)
+	potential_main_file=$(cd "$1" && fd -t file -d=1 -H -E ".git*" "$element_name|conf|main|index" | head -n 1)
 
 	[ -f "$1""$potential_main_file" ] && edit ~/"$1""$potential_main_file"
 	edit ~/"$1"
